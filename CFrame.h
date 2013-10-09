@@ -43,10 +43,10 @@ protected:
 	HINSTANCE m_hInst;
 	string m_ClassName;
 
-	virtual LRESULT OnFrameDestroy();
-	virtual LRESULT OnFrameClose();
-	virtual LRESULT OnFrameRepaint();
-	virtual LRESULT OnControlEvent(CFrame * ct, DWORD evcode);
+	virtual BOOL OnFrameDestroy();
+	virtual BOOL OnFrameClose();
+	virtual BOOL OnFrameRepaint();
+	virtual BOOL OnControlEvent(CFrame * ct, DWORD evcode);
 
 
 public:
@@ -90,8 +90,8 @@ private:
 	CFrame *m_pButton1, *m_pButton2;
 
 protected:
-	virtual LRESULT OnFrameDestroy();
-	virtual LRESULT OnControlEvent(CFrame * ct, DWORD evcode);
+	virtual BOOL OnFrameDestroy();
+	virtual BOOL OnControlEvent(CFrame * ct, DWORD evcode);
 
 public:
 	CTestFrame(HINSTANCE hinst,LPCTSTR fname);

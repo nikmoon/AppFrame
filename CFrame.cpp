@@ -286,10 +286,10 @@ CFrame::MoveFrame(int x,int y,int cx,int cy, BOOL repaint)
 //	Обработчик события
 //
 //--------------------------------------------------------------------------
-LRESULT
+BOOL
 CFrame::OnFrameDestroy()
 {
-	return 0;
+	return FALSE;
 }
 
 
@@ -298,7 +298,7 @@ CFrame::OnFrameDestroy()
 //	Обработчик события
 //
 //--------------------------------------------------------------------------
-LRESULT
+BOOL
 CFrame::OnFrameClose()
 {
 	int mbres = ::MessageBox(m_hWnd,"Frame is closing", "Warning", MB_OKCANCEL);
@@ -306,7 +306,7 @@ CFrame::OnFrameClose()
 	{
 		DestroyFrame();
 	}
-	return 0;
+	return FALSE;
 }
 
 
@@ -316,10 +316,10 @@ CFrame::OnFrameClose()
 //	Обработчик события
 //
 //--------------------------------------------------------------------------
-LRESULT
+BOOL
 CFrame::OnFrameRepaint()
 {
-	return 1;
+	return TRUE;
 }
 
 
@@ -328,10 +328,10 @@ CFrame::OnFrameRepaint()
 //	Обработчик события
 //
 //--------------------------------------------------------------------------
-LRESULT
+BOOL
 CFrame::OnControlEvent(CFrame * ct, DWORD evcode)
 {
-	return 0;
+	return FALSE;
 }
 
 
@@ -355,22 +355,23 @@ CFrame::BindWndProc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
 
 	// флаг отвечает за необходимость вызова дефолтной оконной процедуры
 	// обработчик пользователя должен установить флаг в 0, чтобы дефолтная процедура не вызывалась
-	LRESULT res = 1;
+	BOOL fCallDefault = TRUE;
+
 
 	switch (msg)
 	{
 		// системное окно уничтожается
 		case WM_DESTROY:
 			pframe->UnbindFrame();			// отвязываем наш экземпляр класса от системного окна
-			res = pframe->OnFrameDestroy();	// обработчик события
+			fCallDefault = pframe->OnFrameDestroy();	// обработчик события
 			break;
 
 		case WM_CLOSE:
-			res = pframe->OnFrameClose();
+			fCallDefault = pframe->OnFrameClose();
 			break;
 
 		case WM_PAINT:
-			res = pframe->OnFrameRepaint();
+			fCallDefault = pframe->OnFrameRepaint();
 			break;
 
 		// получено сообщение от контрола или т.п.
@@ -378,7 +379,7 @@ CFrame::BindWndProc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
 			if (lp != 0)	// если сообщение получено от дочернего элемента управления
 			{
 				// вызываем обработчик сообщений
-				res = pframe->OnControlEvent((CFrame*)::GetWindowLongPtr((HWND)lp,GWLP_USERDATA),HIWORD(wp));
+				fCallDefault = pframe->OnControlEvent((CFrame*)::GetWindowLongPtr((HWND)lp,GWLP_USERDATA),HIWORD(wp));
 			}
 			break;
 	}
@@ -386,18 +387,18 @@ CFrame::BindWndProc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
 	// если оконная процедура была нашим экземпляром переопределена, вызываем оригинальную процедуру
 	if (pframe->m_WndProc != NULL)
 	{
-		res = ::CallWindowProc(pframe->m_WndProc,hwnd,msg,wp,lp);
+		fCallDefault = ::CallWindowProc(pframe->m_WndProc,hwnd,msg,wp,lp);
 	}
 	else
 	{
 		// если необходимо вызвать дефолтную оконную процедуру
-		if (res != 0)
+		if (fCallDefault)
 		{
 			// делаем это
-			res = ::DefWindowProc(hwnd,msg,wp,lp);
+			fCallDefault = ::DefWindowProc(hwnd,msg,wp,lp);
 		}
 	}
-	return res;
+	return fCallDefault;
 }
 
 
@@ -442,15 +443,15 @@ CTestFrame::~CTestFrame()
 
 
 
-LRESULT
+BOOL
 CTestFrame::OnFrameDestroy()
 {
 	PostQuitMessage(0);
-	return 0;
+	return FALSE;
 }
 
 
-LRESULT
+BOOL
 CTestFrame::OnControlEvent(CFrame * ct, DWORD evcode)
 {
 	if ((ct == m_pButton1) || (ct == m_pButton2))	// нажата кнопка m_pButton
@@ -460,7 +461,7 @@ CTestFrame::OnControlEvent(CFrame * ct, DWORD evcode)
 
 //		::MessageBox(m_hWnd, "Button WS_SIZEBOX changed", "Event", MB_OK);
 	}
-	return 0;
+	return FALSE;
 }
 
 
