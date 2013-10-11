@@ -55,9 +55,11 @@ protected:
 	CBaseFrame	*m_Parent;
 	string		m_ClassName;
 
+	virtual LRESULT OnFrameEvent(UINT msg, WPARAM wp, LPARAM lp) = 0;
+
 private:
 	static LRESULT CALLBACK BindWndProc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp);
-	virtual LRESULT OnFrameEvent(UINT msg, WPARAM wp, LPARAM lp) = 0;
+
 
 	WNDPROC BindFrame(HWND hwnd);
 	void UnbindFrame();

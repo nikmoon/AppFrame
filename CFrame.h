@@ -19,27 +19,49 @@ using namespace std;
 namespace AppFrameNameSpace
 {
 
-class CFrame;
-
 
 
 class CFrame : public CBaseFrame
 {
+public:
+	CFrame(HINSTANCE hinst,UINT cstyle,HICON hicon,HICON hiconsm,HCURSOR hcursor,HBRUSH hbr,
+			LPCTSTR clname,DWORD fstyle,DWORD fstyleex,LPCTSTR fname,CBaseFrame *pparent,int,int,int,int);
+	CFrame(HINSTANCE hinst,LPCTSTR clname,DWORD fstyle,DWORD fstyleex,LPCTSTR fname,CBaseFrame *pparent,
+			int,int,int,int);
+	CFrame(const CBaseFrame &src);
+
+protected:
+	virtual LRESULT OnFrameEvent(UINT msg, WPARAM wp, LPARAM lp);
+private:
+
 };
 
 
 
 
 
-class CButtonFrame : public CFrame
+class CButton : public CFrame
 {
+public:
+	CButton(HINSTANCE hinst,CFrame *pparent,LPCTSTR btext);
+	virtual LRESULT OnFrameEvent(UINT msg, WPARAM wp, LPARAM lp);
+protected:
+private:
 };
 
 
 
 
-class CTestFrame : public CFrame
+class CMainFrame : public CFrame
 {
+public:
+	CMainFrame(HINSTANCE hinst,LPCTSTR title,int,int,int,int);
+	virtual ~CMainFrame();
+protected:
+	virtual LRESULT OnFrameEvent(UINT msg, WPARAM wp, LPARAM lp);
+private:
+	CButton * pButtonExit, *pButtonHello, *pButtonQwer;
+
 };
 
 

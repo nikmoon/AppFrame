@@ -281,7 +281,7 @@ CBaseFrame::BindWndProc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
 	// получаем св€занный с окном экземпл€р класса
 	CBaseFrame * pframe = (CBaseFrame*)::GetWindowLongPtr(hwnd,GWLP_USERDATA);
 
-	if (pframe)
+	if (pframe != NULL)
 	{
 		ResVal = pframe->OnFrameEvent(msg,wp,lp);
 		if (msg == WM_DESTROY)
@@ -336,7 +336,7 @@ CBaseFrame::UnbindFrame()
 	// восстанавливаем адрес оконной процедуры
 	if (m_WndProc != NULL)
 	{
-		::SetWindowLongPtr(m_hWnd,GWLP_WNDPROC,(LONG_PTR)m_WndProc);
+		//::SetWindowLongPtr(m_hWnd,GWLP_WNDPROC,(LONG_PTR)m_WndProc);
 	}
 }
 
