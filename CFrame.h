@@ -25,8 +25,8 @@ class CFrame : public CBaseFrame
 {
 public:
 	CFrame(HINSTANCE hinst,UINT cstyle,HICON hicon,HICON hiconsm,HCURSOR hcursor,HBRUSH hbr,
-			LPCTSTR clname,DWORD fstyle,DWORD fstyleex,LPCTSTR fname,CBaseFrame *pparent,int,int,int,int);
-	CFrame(HINSTANCE hinst,LPCTSTR clname,DWORD fstyle,DWORD fstyleex,LPCTSTR fname,CBaseFrame *pparent,
+			LPCTSTR clname,DWORD fstyle,DWORD fstyleex,LPCTSTR ftext,CBaseFrame *pparent,int,int,int,int);
+	CFrame(HINSTANCE hinst,LPCTSTR clname,DWORD fstyle,DWORD fstyleex,LPCTSTR ftext,CBaseFrame *pparent,
 			int,int,int,int);
 	CFrame(const CBaseFrame &src);
 
@@ -39,30 +39,65 @@ private:
 
 
 
-
-class CButton : public CFrame
+class CControlFrame : public CBaseFrame
 {
 public:
-	CButton(HINSTANCE hinst,CFrame *pparent,LPCTSTR btext);
-	virtual LRESULT OnFrameEvent(UINT msg, WPARAM wp, LPARAM lp);
+	CControlFrame(HINSTANCE hinst,LPCTSTR clname,DWORD fstyle,DWORD fstyleex,LPCTSTR ftext,CBaseFrame *pparent,
+			int x,int y,int cx,int cy);
 protected:
+	virtual LRESULT OnFrameEvent(UINT msg, WPARAM wp, LPARAM lp);
+};
+
+
+
+class CButton : public CControlFrame
+{
+public:
+	CButton(HINSTANCE hinst,CBaseFrame *pparent,LPCTSTR btext);
+	CButton(HINSTANCE hinst,CBaseFrame *pparent,LPCTSTR btext,int x,int y,int cx,int cy);
+protected:
+
 private:
+};
+
+
+class CStateButton : public CControlFrame
+{
+public:
+	CStateButton(HINSTANCE hinst,CBaseFrame *pparent,LPCTSTR btext);
+	CStateButton(HINSTANCE hinst,CBaseFrame *pparent,LPCTSTR btext,int x,int y,int cx,int cy);
+};
+
+
+class CGroupBox : public CControlFrame
+{
+public:
+	CGroupBox(HINSTANCE hinst,CBaseFrame *pparent,LPCTSTR gbtext);
+	CGroupBox(HINSTANCE hinst,CBaseFrame *pparent,LPCTSTR gbtext,int x,int y,int cx,int cy);
 };
 
 
 
 
-class CMainFrame : public CFrame
+class CDialogFrame : public CBaseFrame
 {
 public:
-	CMainFrame(HINSTANCE hinst,LPCTSTR title,int,int,int,int);
-	virtual ~CMainFrame();
+	CDialogFrame(HINSTANCE hinst,UINT cstyle,HICON hicon,HICON hiconsm,HCURSOR hcursor,HBRUSH hbr,
+			LPCTSTR clname,DWORD fstyle,DWORD fstyleex,LPCTSTR ftext,CBaseFrame *pparent,int,int,int,int);
+	~CDialogFrame();
+
+	CControlFrame * AddButton(LPCTSTR btext,int x,int y,int cx,int cy);
+
 protected:
 	virtual LRESULT OnFrameEvent(UINT msg, WPARAM wp, LPARAM lp);
-private:
-	CButton * pButtonExit, *pButtonHello, *pButtonQwer;
+	virtual void OnButtonPush(CControlFrame * pbutton);
 
+private:
+	static const UINT MAX_CHILD_COUNT = 50;
+	UINT m_ChildCount;
+	CControlFrame ** m_pChildArray;
 };
+
 
 
 

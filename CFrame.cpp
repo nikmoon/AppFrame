@@ -12,17 +12,17 @@ namespace AppFrameNameSpace {
 
 
 CFrame::CFrame(HINSTANCE hinst,UINT cstyle,HICON hicon,HICON hiconsm,HCURSOR hcursor,HBRUSH hbr,
-		LPCTSTR clname,DWORD fstyle,DWORD fstyleex,LPCTSTR fname,CBaseFrame *pparent,int x,int y,int cx,int cy)
-	: CBaseFrame(hinst,cstyle,hicon,hiconsm,hcursor,hbr,clname,fstyle,fstyleex,fname,pparent,x,y,cx,cy)
+		LPCTSTR clname,DWORD fstyle,DWORD fstyleex,LPCTSTR ftext,CBaseFrame *pparent,int x,int y,int cx,int cy)
+	: CBaseFrame(hinst,cstyle,hicon,hiconsm,hcursor,hbr,clname,fstyle,fstyleex,ftext,pparent,x,y,cx,cy)
 {
 
 }
 
 
 
-CFrame::CFrame(HINSTANCE hinst,LPCTSTR clname,DWORD fstyle,DWORD fstyleex,LPCTSTR fname,CBaseFrame *pparent,
+CFrame::CFrame(HINSTANCE hinst,LPCTSTR clname,DWORD fstyle,DWORD fstyleex,LPCTSTR ftext,CBaseFrame *pparent,
 		int x,int y,int cx,int cy)
-	: CBaseFrame(hinst,clname,fstyle,fstyleex,fname,pparent,x,y,cx,cy)
+	: CBaseFrame(hinst,clname,fstyle,fstyleex,ftext,pparent,x,y,cx,cy)
 {
 
 }
@@ -43,70 +43,150 @@ CFrame::OnFrameEvent(UINT msg, WPARAM wp, LPARAM lp)
 
 
 
-
-CButton::CButton(HINSTANCE hinst,CFrame *pparent,LPCTSTR btext)
-	: CFrame(hinst,"BUTTON",BS_PUSHBUTTON|WS_CHILD,0,btext,pparent,CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT)
+CControlFrame::CControlFrame(HINSTANCE hinst,LPCTSTR clname,DWORD fstyle,DWORD fstyleex,LPCTSTR ftext,
+		CBaseFrame *pparent,int x,int y,int cx,int cy)
+	: CBaseFrame(hinst,clname,fstyle|WS_CHILD,fstyleex,ftext,pparent,x,y,cx,cy)
 {
 	// для элемента управления должен быть задан родительский фрейм
 	if (pparent == NULL)
 	{
 		// обработка ошибки
-		MessageBox(NULL,"Give me a parent! (button)","Warning",MB_OK);
+		MessageBox(NULL,"Give me a parent! (I am a control element!!!)","Warning",MB_OK);
 		PostQuitMessage(0);
 	}
 }
 
 
+
+
 LRESULT
-CButton::OnFrameEvent(UINT msg, WPARAM wp, LPARAM lp)
+CControlFrame::OnFrameEvent(UINT msg, WPARAM wp, LPARAM lp)
 {
 	return ::CallWindowProc(m_WndProc,m_hWnd,msg,wp,lp);
 }
 
 
 
-
-
-
-CMainFrame::CMainFrame(HINSTANCE hinst,LPCTSTR title,int x,int y,int cx,int cy)
-	: CFrame(hinst,CS_HREDRAW|CS_VREDRAW,0,0,0,0,"CMainFrame",WS_OVERLAPPEDWINDOW,0,title,NULL,x,y,cx,cy)
+CButton::CButton(HINSTANCE hinst,CBaseFrame *pparent,LPCTSTR btext)
+	: CControlFrame(hinst,"BUTTON",BS_PUSHBUTTON,0,btext,pparent,CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT)
 {
-	pButtonExit = new CButton(m_hInst,this,"Выход");
-	pButtonExit->MoveFrame(0,0, 100, 30, FALSE);
-	pButtonExit->ShowFrame();
-
-	pButtonHello = new CButton(m_hInst,this,"Привет");
-	pButtonHello->MoveFrame(110,0, 100, 30, TRUE);
-	pButtonHello->ShowFrame();
-
-	pButtonQwer = new CButton(m_hInst,this,"Qwer");
-	pButtonQwer->MoveFrame(220,0, 100, 30, TRUE);
-	pButtonQwer->ShowFrame();
 
 }
 
 
-CMainFrame::~CMainFrame()
+CButton::CButton(HINSTANCE hinst,CBaseFrame *pparent,LPCTSTR btext,int x,int y,int cx,int cy)
+	: CControlFrame(hinst,"BUTTON",BS_PUSHBUTTON,0,btext,pparent,x,y,cx,cy)
 {
-	delete pButtonExit;
-	delete pButtonHello;
+
 }
+
+
+CStateButton::CStateButton(HINSTANCE hinst,CBaseFrame *pparent,LPCTSTR btext)
+	: CControlFrame(hinst,"BUTTON",BS_AUTOCHECKBOX|BS_PUSHLIKE,0,btext,pparent,CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT)
+{
+
+}
+
+
+CStateButton::CStateButton(HINSTANCE hinst,CBaseFrame *pparent,LPCTSTR btext,int x,int y,int cx,int cy)
+	: CControlFrame(hinst,"BUTTON",BS_AUTOCHECKBOX|BS_PUSHLIKE,0,btext,pparent,x,y,cx,cy)
+{
+
+}
+
+
+CGroupBox::CGroupBox(HINSTANCE hinst,CBaseFrame *pparent,LPCTSTR gbtext)
+	: CControlFrame(hinst,"BUTTON",BS_GROUPBOX,0,gbtext,pparent,CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT)
+{
+
+}
+
+
+CGroupBox::CGroupBox(HINSTANCE hinst,CBaseFrame *pparent,LPCTSTR gbtext,int x,int y,int cx,int cy)
+	: CControlFrame(hinst,"BUTTON",BS_GROUPBOX,0,gbtext,pparent,x,y,cx,cy)
+{
+
+}
+
+
+
+
+CDialogFrame::CDialogFrame(HINSTANCE hinst,UINT cstyle,HICON hicon,HICON hiconsm,HCURSOR hcursor,HBRUSH hbr,
+		LPCTSTR clname,DWORD fstyle,DWORD fstyleex,LPCTSTR ftext,CBaseFrame *pparent,int x,int y,int cx,int cy)
+	: CBaseFrame(hinst,cstyle,hicon,hiconsm,hcursor,hbr,clname,fstyle,fstyleex,ftext,pparent,x,y,cx,cy)
+{
+	m_ChildCount = 0;
+	m_pChildArray = new CControlFrame* [MAX_CHILD_COUNT+1];	// +1 для завершающего NULL
+	m_pChildArray[0] = NULL;
+}
+
+
+
+CDialogFrame::~CDialogFrame()
+{
+
+	// удаляем все созданные элементы в массиве
+	UINT i = 0;
+	while(m_pChildArray[i] != NULL)
+	{
+		delete m_pChildArray[i];
+		i++;
+	}
+
+	// удаляем сам массив
+	delete [] m_pChildArray;
+}
+
+
+CControlFrame *
+CDialogFrame::AddButton(LPCTSTR btext,int x,int y,int cx,int cy)
+{
+	// проверяем свободное место в массиве
+	if (m_ChildCount < MAX_CHILD_COUNT)
+	{
+		CControlFrame * ptemp = new CStateButton(m_hInst,this,btext,x,y,cx,cy);
+		ptemp->ShowFrame();
+		m_pChildArray[m_ChildCount] = ptemp;
+		m_ChildCount++;
+		m_pChildArray[m_ChildCount] = NULL;
+		return ptemp;
+	}
+
+	return NULL;
+}
+
+
 
 
 LRESULT
-CMainFrame::OnFrameEvent(UINT msg, WPARAM wp, LPARAM lp)
+CDialogFrame::OnFrameEvent(UINT msg, WPARAM wp, LPARAM lp)
 {
 	switch (msg)
 	{
+		case WM_COMMAND:
+			if (lp != 0)	// значит сообщение от элемента управления
+			{
+				OnButtonPush((CControlFrame*)GetFramePtr((HWND)lp));
+			}
+			break;
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			break;
 		default:
-			return CFrame::OnFrameEvent(msg,wp,lp);
+			return ::DefWindowProc(m_hWnd,msg,wp,lp);
 	}
 
 	return 0;
 }
+
+
+void
+CDialogFrame::OnButtonPush(CControlFrame * pbutton)
+{
+//	pbutton->DestroyFrame();
+}
+
+
 
 
 } /* namespace AppFrameNameSpace */

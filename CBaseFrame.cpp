@@ -27,7 +27,7 @@ CBaseFrame::RegisterFrameClass(HINSTANCE hinst,UINT cstyle,HICON hicon,HICON hic
 	wc.hInstance = hinst;
 	wc.hIcon = (hicon != NULL) ? hicon : ::LoadIcon(NULL, IDI_APPLICATION);
 	wc.hCursor = (hcursor != NULL) ? hcursor : ::LoadCursor(NULL,IDC_ARROW);
-	wc.hbrBackground = (hbr != NULL) ? hbr : (HBRUSH)(COLOR_WINDOW + 1);
+	wc.hbrBackground = (hbr != NULL) ? hbr : (HBRUSH)(COLOR_BTNFACE + 1);
 	wc.lpszMenuName = NULL;
 	wc.lpszClassName = clname;
 	wc.hIconSm = (hiconsm != NULL) ? hiconsm : ::LoadIcon(NULL,IDI_APPLICATION);
@@ -60,13 +60,22 @@ CBaseFrame::CreateFrame(HINSTANCE hinst, DWORD style, DWORD exstyle, LPCTSTR cln
 }
 
 
+
+void *
+CBaseFrame::GetFramePtr(HWND hwnd)
+{
+	// получаем св€занный с окном экземпл€р класса
+	return (void*)::GetWindowLongPtr(hwnd,GWLP_USERDATA);
+}
+
+
 //--------------------------------------------------------------------------
 //
 //	ќсновной конструктор CBaseFrame (с регистрацией оконного класса)
 //
 //--------------------------------------------------------------------------
 CBaseFrame::CBaseFrame(HINSTANCE hinst,UINT cstyle,HICON hicon,HICON hiconsm,HCURSOR hcursor,HBRUSH hbr,
-		LPCTSTR clname,DWORD fstyle,DWORD fstyleex,LPCTSTR fname,CBaseFrame *pparent,int x,int y,int cx,int cy)
+		LPCTSTR clname,DWORD fstyle,DWORD fstyleex,LPCTSTR ftext,CBaseFrame *pparent,int x,int y,int cx,int cy)
 {
 	ATOM
 	// регистраци€ оконного класса
@@ -77,7 +86,7 @@ CBaseFrame::CBaseFrame(HINSTANCE hinst,UINT cstyle,HICON hicon,HICON hiconsm,HCU
 	}
 
 	// создание окна в системе
-	m_hWnd = CreateFrame(hinst, fstyle, fstyleex, clname, fname, pparent, x, y, cx, cy);
+	m_hWnd = CreateFrame(hinst, fstyle, fstyleex, clname, ftext, pparent, x, y, cx, cy);
 	if (m_hWnd == NULL)
 	{
 		// обработка ошибок
@@ -97,11 +106,11 @@ CBaseFrame::CBaseFrame(HINSTANCE hinst,UINT cstyle,HICON hicon,HICON hiconsm,HCU
 //	ќсновной конструктор CBaseFrame (без регистрации оконного класса)
 //
 //--------------------------------------------------------------------------
-CBaseFrame::CBaseFrame(HINSTANCE hinst,LPCTSTR clname,DWORD fstyle,DWORD fstyleex,LPCTSTR fname,
+CBaseFrame::CBaseFrame(HINSTANCE hinst,LPCTSTR clname,DWORD fstyle,DWORD fstyleex,LPCTSTR ftext,
 		CBaseFrame *pparent,int x,int y,int cx,int cy)
 {
 	// создание окна в системе
-	m_hWnd = CreateFrame(hinst, fstyle, fstyleex, clname, fname, pparent, x, y, cx, cy);
+	m_hWnd = CreateFrame(hinst, fstyle, fstyleex, clname, ftext, pparent, x, y, cx, cy);
 	if (m_hWnd == NULL)
 	{
 		// обработка ошибок
@@ -278,8 +287,15 @@ CBaseFrame::BindWndProc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
 {
 	LRESULT ResVal;
 
+	if (msg == BM_CLICK)
+	{
+//		MessageBox(NULL,"¬ы нажали кнопочку )))","¬нимание",MB_OK);
+	}
+
+
 	// получаем св€занный с окном экземпл€р класса
-	CBaseFrame * pframe = (CBaseFrame*)::GetWindowLongPtr(hwnd,GWLP_USERDATA);
+	CBaseFrame * pframe = (CBaseFrame*)GetFramePtr(hwnd);
+			//(CBaseFrame*)::GetWindowLongPtr(hwnd,GWLP_USERDATA);
 
 	if (pframe != NULL)
 	{

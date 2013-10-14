@@ -26,10 +26,11 @@ public:
 	static BOOL UnregisterFrameClass(LPCTSTR clname, HINSTANCE hinst);
 	static HWND CreateFrame(HINSTANCE hinst, DWORD style, DWORD exstyle, LPCTSTR clname, LPCTSTR fname,
 				CBaseFrame *pparent,int x,int y,int cx,int cy);
+	static 	void * GetFramePtr(HWND hwnd);
 
 	CBaseFrame(HINSTANCE hinst,UINT cstyle,HICON hicon,HICON hiconsm,HCURSOR hcursor,HBRUSH hbr,
-			LPCTSTR clname,DWORD fstyle,DWORD fstyleex,LPCTSTR fname,CBaseFrame *pparent,int,int,int,int);
-	CBaseFrame(HINSTANCE hinst,LPCTSTR clname,DWORD fstyle,DWORD fstyleex,LPCTSTR fname,CBaseFrame *pparent,
+			LPCTSTR clname,DWORD fstyle,DWORD fstyleex,LPCTSTR ftext,CBaseFrame *pparent,int,int,int,int);
+	CBaseFrame(HINSTANCE hinst,LPCTSTR clname,DWORD fstyle,DWORD fstyleex,LPCTSTR ftext,CBaseFrame *pparent,
 			int,int,int,int);
 	CBaseFrame(const CBaseFrame &src);
 
