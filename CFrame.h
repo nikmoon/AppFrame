@@ -10,7 +10,9 @@
 
 #include <iostream>
 #include <windows.h>
+#include <commctrl.h>
 #include <string>
+#include <list>
 
 #include "CBaseFrame.h"
 
@@ -77,6 +79,13 @@ public:
 };
 
 
+class CTreeView : public CControlFrame
+{
+public:
+	CTreeView(HINSTANCE hinst,CBaseFrame *pparent,LPCTSTR gbtext,int x,int y,int cx,int cy);
+};
+
+
 
 
 class CDialogFrame : public CBaseFrame
@@ -86,16 +95,21 @@ public:
 			LPCTSTR clname,DWORD fstyle,DWORD fstyleex,LPCTSTR ftext,CBaseFrame *pparent,int,int,int,int);
 	~CDialogFrame();
 
-	CControlFrame * AddButton(LPCTSTR btext,int x,int y,int cx,int cy);
+	BOOL AddButton(LPCTSTR btext,int x,int y,int cx,int cy);
+	BOOL AddStateButton(LPCTSTR btext,int x,int y,int cx,int cy);
+	BOOL AddGroupBox(LPCTSTR gbtext,int x,int y,int cx,int cy);
+	BOOL AddTreeView(LPCTSTR ttext, int x,int y,int cx,int cy);
+
 
 protected:
 	virtual LRESULT OnFrameEvent(UINT msg, WPARAM wp, LPARAM lp);
 	virtual void OnButtonPush(CControlFrame * pbutton);
 
+	BOOL AddControlFrame(CControlFrame * pframe);
+	void DeleteControlFrame(CControlFrame * pframe);
+
 private:
-	static const UINT MAX_CHILD_COUNT = 50;
-	UINT m_ChildCount;
-	CControlFrame ** m_pChildArray;
+	list< CControlFrame* > m_ChildList;
 };
 
 
